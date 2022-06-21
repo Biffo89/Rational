@@ -206,16 +206,20 @@ public final class Rational {
     }
 
     /**
-     * Exponent must be non-negative, and may not be zero if the base is zero.
+     * Exponent must be positive if the base is zero.
      * @return this ^ exponent
      */
     public Rational pow(int exponent) {
-        if (exponent < 0) throw new IllegalArgumentException();
-        if (exponent == 0 && this.signum() == 0) throw new IllegalArgumentException();
+        if (exponent <= 0 && this.signum() == 0) throw new IllegalArgumentException();
         if (exponent == 0) return new Rational(1);
         Rational result = new Rational(1);
-        result.num = this.num.pow(exponent);
-        result.den = this.den.pow(exponent);
+        if (exponent > 0) {
+            result.num = this.num.pow(exponent);
+            result.den = this.den.pow(exponent);
+        } else {
+            result.num = this.den.pow(-exponent);
+            result.den = this.num.pow(-exponent);
+        }
         return result;
     }
 
