@@ -86,6 +86,14 @@ public class Rational {
         return result;
     }
 
+    public Rational abs() {
+        if (num.signum() >= 0) return this;
+        Rational r = new Rational(1);
+        r.num = this.num.negate();
+        r.den = this.den;
+        return r;
+    }
+
     public int signum() {
         return num.signum();
     }
@@ -132,6 +140,16 @@ public class Rational {
 
     public Rational div(long other) {
         return this.div(new Rational(other));
+    }
+
+    public Rational pow(int exponent) {
+        if (exponent < 0) throw new IllegalArgumentException();
+        if (exponent == 0 && this.signum() == 0) throw new IllegalArgumentException();
+        if (exponent == 0) return new Rational(1);
+        Rational result = new Rational(1);
+        result.num = this.num.pow(exponent);
+        result.den = this.den.pow(exponent);
+        return result;
     }
 
     public int compareTo(long other) {
