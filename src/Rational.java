@@ -6,30 +6,29 @@ public class Rational {
     BigInteger num,den;
     public Rational(long num,long den) {
         if (den == 0) throw new IllegalArgumentException();
-        this.num = new BigInteger(num+"");
-        this.den = new BigInteger(den+"");
+        this.num = BigInteger.valueOf(num);
+        this.den = BigInteger.valueOf(den);
         simplify();
     }
     public Rational(long num) {
-        this.num = new BigInteger(num+"");
-        this.den = new BigInteger("1");
-        simplify();
+        this.num = BigInteger.valueOf(num);
+        this.den = BigInteger.ONE;
     }
     private Rational(BigInteger num, BigInteger den) {
-        if (den.equals(new BigInteger("0"))) throw new IllegalArgumentException();
+        if (den.signum() == 0) throw new IllegalArgumentException();
         this.num = num;
         this.den = den;
         simplify();
     }
     private void simplify() {
-        if (num.equals(new BigInteger("0"))) {
-            den = new BigInteger("1");
+        if (num.equals(BigInteger.ZERO)) {
+            den = BigInteger.ONE;
             return;
         }
         BigInteger gcd = num.gcd(den);
         num = num.divide(gcd);
         den = den.divide(gcd);
-        if (den.compareTo(new BigInteger("0")) < 0) {
+        if (den.signum() < 0) {
             num = num.negate();
             den = den.negate();
         }
@@ -49,7 +48,7 @@ public class Rational {
         return new Rational(this.num.multiply(other.num),this.den.multiply(other.den));
     }
     public Rational div(Rational other) {
-        if (other.equals(new Rational(0,1))) throw new IllegalArgumentException();
+        if (other.equals(new Rational(0))) throw new IllegalArgumentException();
         return new Rational(this.num.multiply(other.den),this.den.multiply(other.num));
     }
     public int signum() {
@@ -77,16 +76,16 @@ public class Rational {
         return this.compareTo(other) != 0;
     }
     public Rational add(long other) {
-        return this.add(new Rational(other,1));
+        return this.add(new Rational(other));
     }
     public Rational sub(long other) {
-        return this.sub(new Rational(other,1));
+        return this.sub(new Rational(other));
     }
     public Rational mul(long other) {
-        return this.mul(new Rational(other,1));
+        return this.mul(new Rational(other));
     }
     public Rational div(long other) {
-        return this.div(new Rational(other,1));
+        return this.div(new Rational(other));
     }
     public int compareTo(long other) {
         return this.sub(other).signum();
@@ -134,7 +133,7 @@ public class Rational {
         return new BigDecimal(num).divide(new BigDecimal(den), precision, RoundingMode.HALF_DOWN);
     }
     public boolean isInt() {
-        return this.den.equals(new BigInteger("1"));
+        return this.den.equals(BigInteger.ONE);
     }
     public String toIntString() {
         if (!isInt()) throw new UnsupportedOperationException();
