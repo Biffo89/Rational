@@ -43,6 +43,8 @@ public class Rational {
         }
     }
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Rational)) return false;
         Rational rational = (Rational) o;
         return this.den.equals(rational.den) && this.num.equals(rational.num);
