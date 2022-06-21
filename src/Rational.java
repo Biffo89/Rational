@@ -3,17 +3,21 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public class Rational {
+
     private BigInteger num,den;
+
     public Rational(long num,long den) {
         if (den == 0) throw new IllegalArgumentException();
         this.num = BigInteger.valueOf(num);
         this.den = BigInteger.valueOf(den);
         simplify();
     }
+
     public Rational(long num) {
         this.num = BigInteger.valueOf(num);
         this.den = BigInteger.ONE;
     }
+
     private Rational(BigInteger num, BigInteger den) {
         if (den.signum() == 0) throw new IllegalArgumentException();
         this.num = num;
@@ -42,6 +46,7 @@ public class Rational {
             den = den.negate();
         }
     }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
@@ -49,107 +54,155 @@ public class Rational {
         Rational rational = (Rational) o;
         return this.den.equals(rational.den) && this.num.equals(rational.num);
     }
+
     public Rational add(Rational other) {
         return new Rational((this.num.multiply(other.den)).add(this.den.multiply(other.num)),this.den.multiply(other.den));
     }
+
     public Rational sub(Rational other) {
         return this.add(new Rational(other.num.negate(),other.den));
     }
+
     public Rational mul(Rational other) {
-        return new Rational(this.num.multiply(other.num),this.den.multiply(other.den));
+        if (this.num.equals(BigInteger.ZERO) || other.num.equals(BigInteger.ZERO))
+            return new Rational(0);
+        Rational result = new Rational(1);
+        BigInteger gcd1 = this.den.gcd(other.num);
+        BigInteger gcd2 = this.num.gcd(other.den);
+        result.num = this.num.multiply(other.num.divide(gcd1));
+        result.den = this.den.multiply(other.den.divide(gcd2));
+        return result;
     }
+
     public Rational div(Rational other) {
+        if (this.num.equals(BigInteger.ZERO))
+            return new Rational(0);
         if (other.equals(new Rational(0))) throw new IllegalArgumentException();
-        return new Rational(this.num.multiply(other.den),this.den.multiply(other.num));
+        Rational result = new Rational(1);
+        BigInteger gcd1 = this.den.gcd(other.den);
+        BigInteger gcd2 = this.num.gcd(other.num);
+        result.num = this.num.multiply(other.den.divide(gcd1));
+        result.den = this.den.multiply(other.num.divide(gcd2));
+        return result;
     }
+
     public int signum() {
         return num.signum();
     }
+
     public int compareTo(Rational other) {
         return this.sub(other).signum();
     }
+
     public boolean lessThan(Rational other) {
         return this.compareTo(other) < 0;
     }
+
     public boolean lessThanOrEqualTo(Rational other) {
         return this.compareTo(other) <= 0;
     }
+
     public boolean greaterThan(Rational other) {
         return this.compareTo(other) > 0;
     }
+
     public boolean greaterThanOrEqualTo(Rational other) {
         return this.compareTo(other) >= 0;
     }
+
     public boolean equalTo(Rational other) {
         return this.compareTo(other) == 0;
     }
+
     public boolean notEqualTo(Rational other) {
         return this.compareTo(other) != 0;
     }
+
     public Rational add(long other) {
         return this.add(new Rational(other));
     }
+
     public Rational sub(long other) {
         return this.sub(new Rational(other));
     }
+
     public Rational mul(long other) {
         return this.mul(new Rational(other));
     }
+
     public Rational div(long other) {
         return this.div(new Rational(other));
     }
+
     public int compareTo(long other) {
         return this.sub(other).signum();
     }
+
     public boolean lessThan(long other) {
         return this.compareTo(other) < 0;
     }
+
     public boolean lessThanOrEqualTo(long other) {
         return this.compareTo(other) <= 0;
     }
+
     public boolean greaterThan(long other) {
         return this.compareTo(other) > 0;
     }
+
     public boolean greaterThanOrEqualTo(long other) {
         return this.compareTo(other) >= 0;
     }
+
     public boolean equalTo(long other) {
         return this.compareTo(other) == 0;
     }
+
     public boolean notEqualTo(long other) {
         return this.compareTo(other) != 0;
     }
+
     public int compareTo(double other) {
         return this.toBigDecimal(1000).compareTo(new BigDecimal(other));
     }
+
     public boolean lessThan(double other) {
         return this.compareTo(other) < 0;
     }
+
     public boolean lessThanOrEqualTo(double other) {
         return this.compareTo(other) <= 0;
     }
+
     public boolean greaterThan(double other) {
         return this.compareTo(other) > 0;
     }
+
     public boolean greaterThanOrEqualTo(double other) {
         return this.compareTo(other) >= 0;
     }
+
     public boolean equalTo(double other) {
         return this.compareTo(other) == 0;
     }
+
     public boolean notEqualTo(double other) {
         return this.compareTo(other) != 0;
     }
+
     public BigDecimal toBigDecimal(int precision) {
         return new BigDecimal(num).divide(new BigDecimal(den), precision, RoundingMode.HALF_DOWN);
     }
+
     public boolean isInt() {
         return this.den.equals(BigInteger.ONE);
     }
+
     public String toIntString() {
         if (!isInt()) throw new UnsupportedOperationException();
         return this.num.toString();
     }
+
     public String toBinaryString(int precision) {
         StringBuilder output = new StringBuilder();
         Rational r = this;
@@ -171,6 +224,7 @@ public class Rational {
         }
         return output.toString();
     }
+
     public String toDoubleString(int precision) {
         StringBuilder output = new StringBuilder();
         Rational r = this;
