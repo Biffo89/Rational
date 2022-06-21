@@ -3,7 +3,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public class Rational {
-    BigInteger num,den;
+    private BigInteger num,den;
     public Rational(long num,long den) {
         if (den == 0) throw new IllegalArgumentException();
         this.num = BigInteger.valueOf(num);
@@ -20,6 +20,15 @@ public class Rational {
         this.den = den;
         simplify();
     }
+
+    public BigInteger getNumerator() {
+        return num;
+    }
+
+    public BigInteger getDenominator() {
+        return den;
+    }
+
     private void simplify() {
         if (num.equals(BigInteger.ZERO)) {
             den = BigInteger.ONE;
